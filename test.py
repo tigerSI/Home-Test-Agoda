@@ -71,7 +71,7 @@ class rate_limited_test(unittest.TestCase):
             response = tester.get('/city?city_name=Bangkok&ordering_type=ASC')
             self.assertEqual(response.status_code, 200)
 
-    def test_configure_city(self):
+    def test_configure_city_default(self):
         with app.test_client(self) as tester:
             tester.post('/city/configure')
             for i in range(50):
@@ -86,7 +86,7 @@ class rate_limited_test(unittest.TestCase):
             response = tester.get('/city?city_name=Bangkok&ordering_type=ASC')
             self.assertEqual(response.status_code, 200)
 
-    def test_configure_room(self):
+    def test_configure_room_default(self):
         with app.test_client(self) as tester:
             tester.post('/room/configure')
             for i in range(50):
@@ -101,6 +101,47 @@ class rate_limited_test(unittest.TestCase):
             response = tester.get('/room?room_type=Deluxe&ordering_type=ASC')
             self.assertEqual(response.status_code, 200)
 
-    
+    def test_configure_city_with_params(self):
+        with app.test_client(self) as tester:
+            tester.post('/city/configure?interval_time=10&number_requests=2')
+            for i in range(2):
+                response = tester.get('/city?city_name=Bangkok&ordering_type=ASC')
+                self.assertEqual(response.status_code, 200)
+
+            response = tester.get('/city?city_name=Bangkok&ordering_type=ASC')
+            self.assertEqual(response.status_code, 429)
+
+            time.sleep(5)
+
+            response = tester.get('/city?city_name=Bangkok&ordering_type=ASC')
+            self.assertEqual(response.status_code, 200)
+
+            time.sleep(10)
+
+            for i in range(2):
+                response = tester.get('/city?city_name=Bangkok&ordering_type=ASC')
+                self.assertEqual(response.status_code, 200)
+
+    def test_configure_room_with_params(self):
+        with app.test_client(self) as tester:
+            tester.post('/room/configure?interval_time=10&number_requests=2')
+            for i in range(2):
+                response = tester.get('/room?room_type=Deluxe&ordering_type=ASC')
+                self.assertEqual(response.status_code, 200)
+
+            response = tester.get('/room?room_type=Deluxe&ordering_type=ASC')
+            self.assertEqual(response.status_code, 429)
+
+            time.sleep(5)
+
+            response = tester.get('/room?room_type=Deluxe&ordering_type=ASC')
+            self.assertEqual(response.status_code, 200)
+
+            time.sleep(10)
+
+            for i in range(2):
+                response = tester.get('/room?room_type=Deluxe&ordering_type=ASC')
+                self.assertEqual(response.status_code, 200)
+                
 if __name__ == '__main__':
     unittest.main()
