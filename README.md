@@ -36,3 +36,14 @@ Rate_limiter.py - It is the main point of this project. This rate limiter has to
 Hoteldb.py - It is similar with the database, I use the given hoteldb.csv as a database of this project.
 Test.py - It is the integration test of this project which I implemented to cover the code coverage as much as I can to prevent the wrong output.
 
+Decision:
+In this section, It focuses on how my rate limiter works.
+When there is any request call the server, each endpoint will check the status through the rate limiter. Each endpoint will pass type of url to rate limiter to check each bucket easily. After, rate limiter knows which bucket is called, it calculated the status code to return through this algorithm. 
+
+    1.) if(current_time > start_time + interval_time or (status is Flase and current_time > start_time + 5 second))
+    2.)     The bucket should reset itself
+    3.) If(token > 0 and status is True)
+    4.)     Token reduces 1 and return status code 200
+    5.) else if(token is zero and status is True)
+    6.)     bucket's status change to timeout and return status code 429
+    7.) else return status code 429
