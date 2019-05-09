@@ -1,0 +1,11 @@
+LOCALHOST = 'localhost'
+PORT = 8080
+
+DEFAULT_CONFIGURE_REQUEST = 50
+DEFAULT_CONFIGURE_INTERVAL = 10
+
+HOTELDB_FILE = './hoteldb.csv'
+COLUMN_NAME = ['CITY', 'HOTELID', 'ROOM', 'PRICE']
+
+BUCKET_LIST = [('city', 10, 5),
+                ('room', 100, 10)]
